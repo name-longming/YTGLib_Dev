@@ -1,27 +1,27 @@
 #include "../YTGLib_Dev/YTGLib_Dev.h"
 
 //初始化IIC接口
-void AT24CXX_Init(GPIO_TypeDef* GPIO_SCL, uint16_t GPIO_Pin_SCL, GPIO_TypeDef* GPIO_SDA, uint16_t GPIO_Pin_SDA)
+void AT24CXX_Init(GPIO_TypeDef* GPIO_SCL_Init, uint16_t GPIO_Pin_SCL_Init, GPIO_TypeDef* GPIO_SDA_Init, uint16_t GPIO_Pin_SDA_Init)
 {
-	IIC_Init(GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);//IIC初始化
+	IIC_Init(GPIO_SCL_Init,GPIO_Pin_SCL_Init,GPIO_SDA_Init,GPIO_Pin_SDA_Init);//IIC初始化
 }
 //在AT24CXX指定地址读出一个数据
 //ReadAddr:开始读数的地址  
 //返回值  :读到的数据
-uint8_t AT24CXX_ReadOneByte(uint16_t ReadAddr,GPIO_TypeDef* GPIO_SCL, uint16_t GPIO_Pin_SCL, GPIO_TypeDef* GPIO_SDA, uint16_t GPIO_Pin_SDA)
+uint8_t AT24CXX_ReadOneByte(uint16_t ReadAddr)
 {				  
 	uint8_t temp=0;		  	    																 
   
-	IIC_Start(GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);  
-	IIC_Send_Byte(0XA0,GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);   //发送器件地址0XA0,写数据 	   
-	IIC_Wait_Ack(GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA); 
-  IIC_Send_Byte(ReadAddr,GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);   //发送低地址
-	IIC_Wait_Ack(GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);	    
-	IIC_Start(GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);  	 	   
-	IIC_Send_Byte(0XA1,GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);           //进入接收模式			   
-	IIC_Wait_Ack(GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);	 
-  temp=IIC_Read_Byte(0,GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);		   
-  IIC_Stop(GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);//产生一个停止条件	
+	IIC_Start();  
+	IIC_Send_Byte(0XA0);   //发送器件地址0XA0,写数据 	   
+	IIC_Wait_Ack(); 
+  IIC_Send_Byte(ReadAddr);   //发送低地址
+	IIC_Wait_Ack();	    
+	IIC_Start();  	 	   
+	IIC_Send_Byte(0XA1);           //进入接收模式			   
+	IIC_Wait_Ack();	 
+  temp=IIC_Read_Byte(0);		   
+  IIC_Stop();//产生一个停止条件	
 //	IIC_Start(GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);
 //	IIC_Send_Byte(0xA0,GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);
 //	IIC_Wait_Ack(GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);
@@ -39,16 +39,16 @@ uint8_t AT24CXX_ReadOneByte(uint16_t ReadAddr,GPIO_TypeDef* GPIO_SCL, uint16_t G
 //在AT24CXX指定地址写入一个数据
 //WriteAddr  :写入数据的目的地址    
 //DataToWrite:要写入的数据
-void AT24CXX_WriteOneByte(uint16_t WriteAddr,uint8_t DataToWrite,GPIO_TypeDef* GPIO_SCL, uint16_t GPIO_Pin_SCL, GPIO_TypeDef* GPIO_SDA, uint16_t GPIO_Pin_SDA)
+void AT24CXX_WriteOneByte(uint16_t WriteAddr,uint8_t DataToWrite)
 {				   	  	    																 
-	IIC_Start(GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);  
-	IIC_Send_Byte(0XA0,GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);   //发送器件地址0XA0,写数据 	 
-	IIC_Wait_Ack(GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);	   
-	IIC_Send_Byte(WriteAddr,GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);   //发送低地址
-	IIC_Wait_Ack(GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA); 	 										  		   
-	IIC_Send_Byte(DataToWrite,GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);     //发送字节							   
-	IIC_Wait_Ack(GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);  		    	   
-	IIC_Stop(GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);//产生一个停止条件 
+	IIC_Start();  
+	IIC_Send_Byte(0XA0);   //发送器件地址0XA0,写数据 	 
+	IIC_Wait_Ack();	   
+	IIC_Send_Byte(WriteAddr);   //发送低地址
+	IIC_Wait_Ack(); 	 										  		   
+	IIC_Send_Byte(DataToWrite);     //发送字节							   
+	IIC_Wait_Ack();  		    	   
+	IIC_Stop();//产生一个停止条件 
 	delay_ms(10);
 
 //	IIC_Start(GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);
@@ -66,12 +66,12 @@ void AT24CXX_WriteOneByte(uint16_t WriteAddr,uint8_t DataToWrite,GPIO_TypeDef* G
 //WriteAddr  :开始写入的地址  
 //DataToWrite:数据数组首地址
 //Len        :要写入数据的长度2,4
-void AT24CXX_WriteLenByte(uint16_t WriteAddr,uint32_t DataToWrite,uint8_t Len,GPIO_TypeDef* GPIO_SCL, uint16_t GPIO_Pin_SCL, GPIO_TypeDef* GPIO_SDA, uint16_t GPIO_Pin_SDA)
+void AT24CXX_WriteLenByte(uint16_t WriteAddr,uint32_t DataToWrite,uint8_t Len)
 {  	
 	uint8_t t;
 	for(t=0;t<Len;t++)
 	{
-		AT24CXX_WriteOneByte(WriteAddr+t,(DataToWrite>>(8*t))&0xff,GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);
+		AT24CXX_WriteOneByte(WriteAddr+t,(DataToWrite>>(8*t))&0xff);
 	}												    
 }
 
@@ -80,14 +80,14 @@ void AT24CXX_WriteLenByte(uint16_t WriteAddr,uint32_t DataToWrite,uint8_t Len,GP
 //ReadAddr   :开始读出的地址 
 //返回值     :数据
 //Len        :要读出数据的长度2,4
-uint32_t AT24CXX_ReadLenByte(uint16_t ReadAddr,uint8_t Len,GPIO_TypeDef* GPIO_SCL, uint16_t GPIO_Pin_SCL, GPIO_TypeDef* GPIO_SDA, uint16_t GPIO_Pin_SDA)
+uint32_t AT24CXX_ReadLenByte(uint16_t ReadAddr,uint8_t Len)
 {  	
 	uint8_t t;
 	uint32_t temp=0;
 	for(t=0;t<Len;t++)
 	{
 		temp<<=8;
-		temp+=AT24CXX_ReadOneByte(ReadAddr+Len-t-1,GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA); 	 				   
+		temp+=AT24CXX_ReadOneByte(ReadAddr+Len-t-1); 	 				   
 	}
 	return temp;												    
 }
@@ -96,15 +96,15 @@ uint32_t AT24CXX_ReadLenByte(uint16_t ReadAddr,uint8_t Len,GPIO_TypeDef* GPIO_SC
 //如果用其他24C系列,这个地址要修改
 //返回1:检测失败
 //返回0:检测成功
-uint8_t AT24CXX_Check(GPIO_TypeDef* GPIO_SCL, uint16_t GPIO_Pin_SCL, GPIO_TypeDef* GPIO_SDA, uint16_t GPIO_Pin_SDA)
+uint8_t AT24CXX_Check()
 {
 	uint8_t temp;
-	temp=AT24CXX_ReadOneByte(255,GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);//避免每次开机都写AT24CXX			   
+	temp=AT24CXX_ReadOneByte(255);//避免每次开机都写AT24CXX			   
 	if(temp==0X55)return 0;		   
 	else//排除第一次初始化的情况
 	{
-		AT24CXX_WriteOneByte(255,0X55,GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);
-	    temp=AT24CXX_ReadOneByte(255,GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);	  
+		AT24CXX_WriteOneByte(255,0X55);
+	    temp=AT24CXX_ReadOneByte(255);	  
 		if(temp==0X55)return 0;
 	}
 	return 1;											  
@@ -114,11 +114,11 @@ uint8_t AT24CXX_Check(GPIO_TypeDef* GPIO_SCL, uint16_t GPIO_Pin_SCL, GPIO_TypeDe
 //ReadAddr :开始读出的地址 对24c02为0~255
 //pBuffer  :数据数组首地址
 //NumToRead:要读出数据的个数
-void AT24CXX_Read(uint16_t ReadAddr,uint8_t *pBuffer,uint16_t NumToRead,GPIO_TypeDef* GPIO_SCL, uint16_t GPIO_Pin_SCL, GPIO_TypeDef* GPIO_SDA, uint16_t GPIO_Pin_SDA)
+void AT24CXX_Read(uint16_t ReadAddr,uint8_t *pBuffer,uint16_t NumToRead)
 {
 	while(NumToRead)
 	{
-		*pBuffer++=AT24CXX_ReadOneByte(ReadAddr++,GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);	
+		*pBuffer++=AT24CXX_ReadOneByte(ReadAddr++);	
 		NumToRead--;
 	}
 }  
@@ -126,11 +126,11 @@ void AT24CXX_Read(uint16_t ReadAddr,uint8_t *pBuffer,uint16_t NumToRead,GPIO_Typ
 //WriteAddr :开始写入的地址 对24c02为0~255
 //pBuffer   :数据数组首地址
 //NumToWrite:要写入数据的个数
-void AT24CXX_Write(uint16_t WriteAddr,uint8_t *pBuffer,uint16_t NumToWrite,GPIO_TypeDef* GPIO_SCL, uint16_t GPIO_Pin_SCL, GPIO_TypeDef* GPIO_SDA, uint16_t GPIO_Pin_SDA)
+void AT24CXX_Write(uint16_t WriteAddr,uint8_t *pBuffer,uint16_t NumToWrite)
 {
 	while(NumToWrite--)
 	{
-		AT24CXX_WriteOneByte(WriteAddr,*pBuffer,GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);
+		AT24CXX_WriteOneByte(WriteAddr,*pBuffer);
 		WriteAddr++;
 		pBuffer++;
 	}

@@ -1,15 +1,24 @@
 #include "../YTGLib_Dev/YTGLib_Dev.h"
 
+GPIO_TypeDef* GPIO_SCL=NULL;
+uint16_t GPIO_Pin_SCL;
+GPIO_TypeDef* GPIO_SDA=NULL;
+uint16_t GPIO_Pin_SDA;
+
 //IIC初始化
-void IIC_Init(GPIO_TypeDef* GPIO_SCL, uint16_t GPIO_Pin_SCL, GPIO_TypeDef* GPIO_SDA, uint16_t GPIO_Pin_SDA)
+void IIC_Init(GPIO_TypeDef* GPIO_SCL_Init, uint16_t GPIO_Pin_SCL_Init, GPIO_TypeDef* GPIO_SDA_Init, uint16_t GPIO_Pin_SDA_Init)
 {
- 
+	GPIO_SCL = GPIO_SCL_Init;
+	GPIO_Pin_SCL = GPIO_Pin_SCL_Init;
+	GPIO_SDA = GPIO_SDA_Init;
+	GPIO_Pin_SDA = GPIO_Pin_SDA_Init;
+	
 	GPIO_SCL->BSRR |= (1<<GPIO_Pin_SCL);
 	GPIO_SDA->BSRR |= (1<<GPIO_Pin_SDA);
 }
 
 //产生IIC起始信号
-void IIC_Start(GPIO_TypeDef* GPIO_SCL, uint16_t GPIO_Pin_SCL, GPIO_TypeDef* GPIO_SDA, uint16_t GPIO_Pin_SDA)
+void IIC_Start()
 {
 	GPIO_SDA->MODER&=~(3<<(GPIO_Pin_SDA*2));
 	GPIO_SDA->MODER|=1<<GPIO_Pin_SDA*2;
@@ -22,7 +31,7 @@ void IIC_Start(GPIO_TypeDef* GPIO_SCL, uint16_t GPIO_Pin_SCL, GPIO_TypeDef* GPIO
 	GPIO_SCL->BSRR |= 1<<(GPIO_Pin_SCL+16);
 }	  
 //产生IIC停止信号
-void IIC_Stop(GPIO_TypeDef* GPIO_SCL, uint16_t GPIO_Pin_SCL, GPIO_TypeDef* GPIO_SDA, uint16_t GPIO_Pin_SDA)
+void IIC_Stop()
 {
 	GPIO_SDA->MODER&=~(3<<(GPIO_Pin_SDA*2));
 	GPIO_SDA->MODER|=1<<GPIO_Pin_SDA*2;
@@ -37,7 +46,7 @@ void IIC_Stop(GPIO_TypeDef* GPIO_SCL, uint16_t GPIO_Pin_SCL, GPIO_TypeDef* GPIO_
 //等待应答信号到来
 //返回值：1，接收应答失败
 //        0，接收应答成功
-uint8_t IIC_Wait_Ack(GPIO_TypeDef* GPIO_SCL, uint16_t GPIO_Pin_SCL, GPIO_TypeDef* GPIO_SDA, uint16_t GPIO_Pin_SDA)
+uint8_t IIC_Wait_Ack()
 {
 	uint8_t ucErrTime=0;
 	GPIO_SDA->MODER&=~(3<<(GPIO_Pin_SDA*2));
@@ -52,7 +61,7 @@ uint8_t IIC_Wait_Ack(GPIO_TypeDef* GPIO_SCL, uint16_t GPIO_Pin_SCL, GPIO_TypeDef
 		ucErrTime++;
 		if(ucErrTime>250)
 		{
-			IIC_Stop(GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);
+			IIC_Stop();
 			return 1;
 		}
 	}
@@ -60,7 +69,7 @@ uint8_t IIC_Wait_Ack(GPIO_TypeDef* GPIO_SCL, uint16_t GPIO_Pin_SCL, GPIO_TypeDef
 	return 0;  
 } 
 //产生ACK应答
-void IIC_Ack(GPIO_TypeDef* GPIO_SCL, uint16_t GPIO_Pin_SCL, GPIO_TypeDef* GPIO_SDA, uint16_t GPIO_Pin_SDA)
+void IIC_Ack()
 {
 	GPIO_SCL->BSRR |= 1<<(GPIO_Pin_SCL+16);
 	
@@ -74,7 +83,7 @@ void IIC_Ack(GPIO_TypeDef* GPIO_SCL, uint16_t GPIO_Pin_SCL, GPIO_TypeDef* GPIO_S
 	GPIO_SCL->BSRR |= 1<<(GPIO_Pin_SCL+16);
 }
 //不产生ACK应答		    
-void IIC_NAck(GPIO_TypeDef* GPIO_SCL, uint16_t GPIO_Pin_SCL, GPIO_TypeDef* GPIO_SDA, uint16_t GPIO_Pin_SDA)
+void IIC_NAck()
 {
 	GPIO_SCL->BSRR |= 1<<(GPIO_Pin_SCL+16);
 	GPIO_SDA->MODER&=~(3<<(GPIO_Pin_SDA*2));
@@ -90,7 +99,7 @@ void IIC_NAck(GPIO_TypeDef* GPIO_SCL, uint16_t GPIO_Pin_SCL, GPIO_TypeDef* GPIO_
 //返回从机有无应答
 //1，有应答
 //0，无应答			  
-void IIC_Send_Byte(uint8_t txd,GPIO_TypeDef* GPIO_SCL, uint16_t GPIO_Pin_SCL, GPIO_TypeDef* GPIO_SDA, uint16_t GPIO_Pin_SDA)
+void IIC_Send_Byte(uint8_t txd)
 {                        
   uint8_t t; 
 
@@ -118,7 +127,7 @@ void IIC_Send_Byte(uint8_t txd,GPIO_TypeDef* GPIO_SCL, uint16_t GPIO_Pin_SCL, GP
 	}	 
 } 	    
 //读1个字节，ack=1时，发送ACK，ack=0，发送nACK   
-uint8_t IIC_Read_Byte(unsigned char ack, GPIO_TypeDef* GPIO_SCL, uint16_t GPIO_Pin_SCL, GPIO_TypeDef* GPIO_SDA, uint16_t GPIO_Pin_SDA)
+uint8_t IIC_Read_Byte(unsigned char ack)
 {
 	unsigned char i,receive=0;
 	GPIO_SDA->MODER&=~(3<<(GPIO_Pin_SDA*2));
@@ -133,9 +142,9 @@ uint8_t IIC_Read_Byte(unsigned char ack, GPIO_TypeDef* GPIO_SCL, uint16_t GPIO_P
 		delay_us(1); 
 	}					 
 	if (!ack)
-		IIC_NAck(GPIO_SCL, GPIO_Pin_SCL, GPIO_SDA, GPIO_Pin_SDA);//发送nACK
+		IIC_NAck();//发送nACK
 	else
-		IIC_Ack(GPIO_SCL, GPIO_Pin_SCL, GPIO_SDA, GPIO_Pin_SDA); //发送ACK   
+		IIC_Ack(); //发送ACK   
 	return receive;
 }
 

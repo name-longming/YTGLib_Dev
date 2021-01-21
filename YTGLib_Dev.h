@@ -74,9 +74,9 @@ void OLED_ShowNum(uint8_t x,uint8_t y,uint32_t num,uint8_t len,uint8_t size2);//
 #endif
 
 /*********************************************************************/
-/*			一定要注意IIC通信时输入参数在各个阶段必须要相同
+/*						仅需要初始化一次	
 如：IIC_Init(GPIOB,8,GPIOB,9); //IIC初始化,GPIOB8作为SCL,GPIOB9作为SDA
-		IIC_Start(GPIOB,8,GPIOB,9);//发送IIC开始信号										 */
+		IIC_Start();//发送IIC开始信号											 */
 /*********************************************************************/
 
 #ifdef MYIIC

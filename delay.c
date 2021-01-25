@@ -38,10 +38,10 @@ void delay_init()
 //	for(i=0;i<nms;i++) delay_us(1000);
 //}
 
-void delay_us(uint32_t nus)
+void delay_us(uint32_t usDelay)
 {
 	uint32_t temp;
-	SysTick->LOAD = (HCLKTICK/8)*nus;
+	SysTick->LOAD = (HCLKTICK/8)*usDelay;
 	SysTick->VAL=0X00;//清空计数器
 	SysTick->CTRL=0X01;//使能，减到零是无动作，采用外部时钟源
 	do
@@ -52,11 +52,10 @@ void delay_us(uint32_t nus)
 	SysTick->VAL =0X00; //清空计数器
 }
 
-/*********慎用***********/
-void delay_ms(uint16_t nms)
+void HAL_Delay(uint32_t Delay)
 {
 	uint32_t temp;
-	SysTick->LOAD = (HCLKTICK/8*1000)*nms;
+	SysTick->LOAD = (HCLKTICK/8*1000)*Delay;
 	SysTick->VAL=0X00;//清空计数器
 	SysTick->CTRL=0X01;//使能，减到零是无动作，采用外部时钟源
 	do

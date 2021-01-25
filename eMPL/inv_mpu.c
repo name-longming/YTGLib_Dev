@@ -48,7 +48,7 @@
 
 #define i2c_write   MPU_Write_Len
 #define i2c_read    MPU_Read_Len
-#define delay_ms    delay_ms
+#define delay_ms    HAL_Delay
 #define get_ms      mget_ms
 //static inline int reg_int_cb(struct int_param_s *int_param)
 //{

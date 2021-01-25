@@ -24,8 +24,8 @@
 
 #ifdef DELAY_US
 void delay_init(void);
-void delay_us(uint32_t nus);
-void delay_ms(uint16_t nms);
+void delay_us(uint32_t usDelay);
+void HAL_Delay(uint32_t Delay);
 #endif
 
 #ifdef OLED_INIT_IIC1

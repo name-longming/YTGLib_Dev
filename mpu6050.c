@@ -82,7 +82,7 @@ uint8_t MPU_Init(GPIO_TypeDef* GPIO_SCL_Init, uint16_t GPIO_Pin_SCL_Init, GPIO_T
 	uint8_t res;
 	IIC_Init(GPIO_SCL_Init,GPIO_Pin_SCL_Init,GPIO_SDA_Init,GPIO_Pin_SDA_Init);//初始化IIC总线
 	MPU_Write_Byte(MPU_PWR_MGMT1_REG,0X80);	//复位MPU6050
-  delay_ms(100);
+  HAL_Delay(100);
 	MPU_Write_Byte(MPU_PWR_MGMT1_REG,0X00);	//唤醒MPU6050 
 	MPU_Set_Gyro_Fsr(3);					//陀螺仪传感器,±2000dps
 	MPU_Set_Accel_Fsr(0);					//加速度传感器,±2g

@@ -49,7 +49,7 @@ void AT24CXX_WriteOneByte(uint16_t WriteAddr,uint8_t DataToWrite)
 	IIC_Send_Byte(DataToWrite);     //发送字节							   
 	IIC_Wait_Ack();  		    	   
 	IIC_Stop();//产生一个停止条件 
-	delay_ms(10);
+	HAL_Delay(10);
 
 //	IIC_Start(GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);
 //	IIC_Send_Byte(0xA0,GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA); //器件地址，0为写操作 
@@ -59,7 +59,7 @@ void AT24CXX_WriteOneByte(uint16_t WriteAddr,uint8_t DataToWrite)
 //	IIC_Send_Byte(DataToWrite,GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA); //要存的数据
 //	IIC_Wait_Ack(GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);
 //	IIC_Stop(GPIO_SCL,GPIO_Pin_SCL,GPIO_SDA,GPIO_Pin_SDA);
-//	delay_ms(10);		
+//	HAL_Delay(10);		
 }
 //在AT24CXX里面的指定地址开始写入长度为Len的数据
 //该函数用于写入16bit或者32bit的数据.

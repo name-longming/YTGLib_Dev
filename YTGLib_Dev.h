@@ -78,7 +78,7 @@ void OLED_ShowNum(uint8_t x,uint8_t y,uint32_t num,uint8_t len,uint8_t size2);//
 /*						仅需要初始化一次	
 如：IIC_Init(GPIOB,8,GPIOB,9); //IIC初始化,GPIOB8作为SCL,GPIOB9作为SDA
 		IIC_Start();//发送IIC开始信号											 
-		mpu_dmp_get_data(&pitch,&roll,&yaw);//得到MPU6050欧拉角					 */
+*/
 /*********************************************************************/
 
 #ifdef MYIIC
@@ -113,7 +113,9 @@ void AT24CXX_Init(GPIO_TypeDef* GPIO_SCL_Init, uint16_t GPIO_Pin_SCL_Init, GPIO_
 /*********************************************************************/
 /*				仅需要初始化一次，且使用陀螺仪前必须要初始化
 			当陀螺仪初始化后，可直接调用mpu_dmp_init()进行DMP初始化
-如：MPU_Init(GPIOB,8,GPIOB,9); //陀螺仪初始化，PB8为SCL，PB9为SDA		*/
+如：MPU_Init(GPIOB,8,GPIOB,9); //陀螺仪初始化，PB8为SCL，PB9为SDA		
+		mpu_dmp_get_data(&pitch,&roll,&yaw);//得到MPU6050欧拉角					 
+*/
 /*********************************************************************/
 
 #include "../YTGLib_Dev/eMPL/inv_mpu.h"

@@ -1,5 +1,6 @@
 #include "../YTGLib_Dev/YTGLib_Dev.h"
 
+#ifdef __i2c_H
 // ------------------  ASCII字模的数据表 ------------------------ //
 // 码表从0x20~0x7e                                                //
 // 字库:  纵向取模下高位// （调用时要减512）
@@ -388,7 +389,7 @@ void WriteDat(unsigned char I2C_Data)//写数据
 	
   }
  
-	void OLED_Init(void)
+void OLED_Init(void)
 {
 	HAL_Delay(100); //这里的延时很重要
 	
@@ -615,3 +616,4 @@ void OLED_ShowNum(uint8_t x,uint8_t y,uint32_t num,uint8_t len,uint8_t size2)
 	 	OLED_ShowChar(x+(size2/2)*t,y,temp+'0',size2); 
 	}
 } 
+#endif

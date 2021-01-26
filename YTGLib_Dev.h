@@ -8,6 +8,7 @@
 #define DELAY_US  				//初始化微妙延时
 #define MYIIC							//初始化模拟IIC
 #define MPU6050						//初始化MPU6050
+#define PRINTF						//初始化串口重定向函数printf
 
 /**************************************************************/
 
@@ -137,6 +138,12 @@ uint8_t MPU_Set_Fifo(uint8_t sens);
 short MPU_Get_Temperature(void);			//得到MPU6050温度
 uint8_t MPU_Get_Gyroscope(short *gx,short *gy,short *gz);	//得到陀螺仪值
 uint8_t MPU_Get_Accelerometer(short *ax,short *ay,short *az);	//得到加速度值
+#endif
+
+#ifdef PRINTF
+#include <stdio.h>
+//重定义fputc函数 
+int fputc(int ch, FILE *f);
 #endif
 
 #endif

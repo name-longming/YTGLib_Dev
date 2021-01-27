@@ -14,7 +14,7 @@
 
 ①引入**YTGLib_Dev**文件夹放入工程文件中（❗注：一定要引入到工程的最外层文件里，即工程根目录中）
 
-> 输入： git submodule add https://github.com/name-longming/YTGLib_Dev    		引入模块驱动库
+> 输入： git submodule add https://github.com/name-longming/YTGLib_Dev
 
 ②在头文件**YTGLib_Dev.h**中定义你需要的使用到的模块
 

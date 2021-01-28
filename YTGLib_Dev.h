@@ -9,6 +9,7 @@
 #define MYIIC							//初始化模拟IIC
 #define MPU6050						//初始化MPU6050
 #define PRINTF						//初始化串口重定向函数printf
+#define MYSPI							//初始化SPI读写函数
 
 /**************************************************************/
 
@@ -144,6 +145,19 @@ uint8_t MPU_Get_Accelerometer(short *ax,short *ay,short *az);	//得到加速度值
 #include <stdio.h>
 //重定义fputc函数 
 int fputc(int ch, FILE *f);
+#endif
+
+#ifdef MYSPI
+#include "spi.h"
+
+extern SPI_HandleTypeDef SPIx;
+extern GPIO_TypeDef* GPIO_CS;
+extern uint16_t GPIO_Pin_CS;
+
+void SPIx_Select_Init(SPI_HandleTypeDef hspix,GPIO_TypeDef* GPIO_CS_Init, uint16_t GPIO_Pin_CS_Init);//初始化选择的SPI以及CS片选
+void SPIx_CS_SetStation(GPIO_PinState GPIO_PIN_State);	//片选电平设置
+uint8_t SPI1_ReadWriteByte(uint8_t TxData);	//SPI读写函数
+
 #endif
 
 #endif
